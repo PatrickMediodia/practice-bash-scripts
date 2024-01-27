@@ -1,0 +1,32 @@
+head
+  - head {path} -> shows first 10 lines
+  - head -n 5 {path} -> shows first 5 lines
+
+tail
+  - tail {path} -> shows last 10 lines
+  - tail -n 5 {path} -> shows last 5 lines
+  - tail -f {path} -> monitors the file for changes, useful for logs
+
+cat
+
+anchors
+  - ^ -> start of the line/file
+  - $ -> end of the line/file
+
+awk
+
+cut
+
+grep
+  - grep [a-z] {path} -> finds the occurances of a to z in the file
+  - grep [a-zA-Z0-9] {path} -> finds the occurances of both capital and lowercase letters in the file
+  - grep [[:alpha:]] {path} -> finds all of the alphabetical characters in the file
+  - grep -e/egrep ^[0-9]{3} {path} -> find the occurances where the first starting 3 of a line is a number
+  
+sed
+  - sed 's/old/new/{occurance#}' {path} -> changes text from old to new in specific occurance number
+  - sed -n '2,5p' {path} -> shows lines 2 to 5 from the file
+  - sed 's/old/new/{g}' {path} -> changes text from old to new on all occurances
+  - sed 's/thingtodelete/d' {path} -> deletes occurances of text
+  - sed 's/$/ end' {path} -> appends the text ' end' to the end of the file
+  - sed 's/^/start ' {path} -> append the text 'start ' to the start of the file
