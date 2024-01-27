@@ -1,32 +1,95 @@
+less
+  - less {path}
+  - opens the file in a pager for easy reading
+  - another option is more {path} but is more limited
+
+cat
+  - cat {path}
+  - shows the contents of the file on the screen, useful for smaller files
+  - might be too much for larger files
+  - use tap {path} to reverse the output
+
+sort
+  - sort {path}
+  - sorts the text files
+
 head
   - head {path} -> shows first 10 lines
   - head -n 5 {path} -> shows first 5 lines
+  - head -5 {path} -> also valid
 
 tail
   - tail {path} -> shows last 10 lines
   - tail -n 5 {path} -> shows last 5 lines
+  - tail -5 {path} -> also valid
   - tail -f {path} -> monitors the file for changes, useful for logs
 
-cat
+cut
+  - cut -d"{delimiter}" -f{column number} {path} -> extract columns from a file
+  - cut -c {range, ex. 1-5} {path} -> extracts characters from the columns,in this case characters 1 to 5
+
+wc
+  - shows the count of lines, words, and characters
+  - wc {-l -w -c} {path}
+  - use the delimiters -l for lines, -w for words, -c for characters
 
 anchors
   - ^ -> start of the line/file
   - $ -> end of the line/file
 
 awk
-
-cut
+  - awk -F ':' '{print $1}' -> -F flag for filter, : for the delimiter, and $1 for which column
+  - awk '/{pattern}/' {print} {path} -> follows a specific pattern
 
 grep
+  - general regular expression parser 
+  - grep '{regex}' {path} -> outputs the whole line that matches the regex
+  - grep {flags} '{regex}' {path} -> makes the search case insentitive
+    - i -> case insensitive search
+    - v -> inverse of matching regex, shows all that does not match the expressions
+    - B {number} -> shows the lines before the line with the matching expression
+    - A {number} -> shows the lines after the line with the matching expression
   - grep [a-z] {path} -> finds the occurances of a to z in the file
-  - grep [a-zA-Z0-9] {path} -> finds the occurances of both capital and lowercase letters in the file
+  - grep [a-zA-Z0-9] {path} -> finds the occurances of alphanumeric characters
   - grep [[:alpha:]] {path} -> finds all of the alphabetical characters in the file
-  - grep -e/egrep ^[0-9]{3} {path} -> find the occurances where the first starting 3 of a line is a number
-  
+  - egrep ^[0-9]{3} {path} -> find the occurances where the first 3 characters of a line is a number
+  - egrep '^[0-9]{3,4}' {path} -> same as the expression above but includes either the first 3 or 4 numbers
+  - ls | egrep {filename} -> list all files using a regular expression (. represents any character)
+  - ls | egrep {filename}. -> . is a wildcard that allows any one (1) character after the expression
+  - ls | egrep {filename}.* -> lists all files using a regular expression including . (any character) and * (unlimited amount of times)
+  - egrep ^[Q].{5} {path} -> starting with letter Q and get wildcard 5 times
+
 sed
+  - sed -n '2,5p' {path} -> shows lines 2 to 5 from the file, -n flag mutes it
   - sed 's/old/new/{occurance#}' {path} -> changes text from old to new in specific occurance number
-  - sed -n '2,5p' {path} -> shows lines 2 to 5 from the file
   - sed 's/old/new/{g}' {path} -> changes text from old to new on all occurances
   - sed 's/thingtodelete/d' {path} -> deletes occurances of text
   - sed 's/$/ end' {path} -> appends the text ' end' to the end of the file
-  - sed 's/^/start ' {path} -> append the text 'start ' to the start of the file
+  - sed 's/^/start ' {path} -> append the text 'start ' to the start of the files
+
+Notes:
+  - | (piped) command is used to get the output of the first expression as an input to the second
+    - { expression } -> output | -> input { expression }
+  - remember to use egrep or grep -e when using extended regular expressions
+  - Remember that > is used to overwrite contents while >> will append contents
+  - touch can also be used to update file edit timestamp
+    - touch {filename}{range} can be used. Ex. touch file{1..5}
+  - dont use sed with the -i flag since it will also edit the file (in-place)
+
+Lecture Activity
+1. Peek into the file /usr/share/dict/words using less
+  - less /usr/share/dict/words
+2. Display all contents of the file /usr/share/dict/words (this will be a lot, you can cancel by pressing Ctrl + C)
+  - cat /usr/share/dict/words
+3. Display the first 10 words in /usr/share/dict/words using head
+  - head /usr/share/dict/words
+4. Display the first 20 words in /usr/share/dict/words using head
+  - head -20 /usr/share/dict/words
+5. Display the last 10 words in /usr/share/dict/words using tail
+  - tail /usr/share/dict/words
+6. Display the last 20 words in /usr/share/dict/words using tail
+  - tail -20 /usr/share/dict/words
+7. Display the number of words listed in /usr/share/dict/words using wc
+  - wc -w /usr/share/dict/words
+8. Display the number of words listed /usr/share/dict/words that only ends in ‘ing’.
+  - grep 'ing$' /usr/share/dict/words | wc -w
